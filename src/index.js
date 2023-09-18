@@ -1,7 +1,7 @@
 import { async } from '@firebase/util';
 import { initializeApp } from 'firebase/app'
 import {
-  getFirestore, collection, getDocs, addDoc, deleteDoc, doc, onSnapshot
+  getFirestore, collection, getDocs, addDoc, deleteDoc, doc, onSnapshot, query, where
 } from 'firebase/firestore'
 
 
@@ -19,7 +19,9 @@ const firebaseConfig = {
   const db = getFirestore()
   //initialise database
   const collectionref = collection(db, "books")
+  const q = query(collectionref, where("title", "!=", "ooooooooooooo"))
   /*
+  
 
   getDocs(collectionref).then((snapshot)=>{
     const book = []
@@ -32,7 +34,7 @@ const firebaseConfig = {
 )
 */
 // get realtime update
-onSnapshot(collectionref, (snapshot)=>{
+onSnapshot(q, (snapshot)=>{
 const realdata = []
 snapshot.docs.forEach((doc)=>{
     realdata.push({...doc.data(), id: doc.id})
