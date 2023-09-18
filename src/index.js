@@ -1,7 +1,7 @@
 import { async } from '@firebase/util';
 import { initializeApp } from 'firebase/app'
 import {
-  getFirestore, collection, getDocs, addDoc, deleteDoc, doc, onSnapshot, query, where
+  getFirestore, collection, getDocs, getDoc, addDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, serverTimestamp, updateDoc
 } from 'firebase/firestore'
 
 
@@ -19,7 +19,7 @@ const firebaseConfig = {
   const db = getFirestore()
   //initialise database
   const collectionref = collection(db, "books")
-  const q = query(collectionref, where("title", "!=", "ooooooooooooo"))
+  const q = query(collectionref, where("title", "!=", "ooooooo"), orderBy("title", "desc"))
   /*
   
 
@@ -47,7 +47,8 @@ adddoc.addEventListener('submit', (e)=>{
     e.preventDefault()
     addDoc(collectionref, {
         title: adddoc.title.value,
-        author: adddoc.author.value
+        author: adddoc.author.value,
+        createdAt: serverTimestamp()
     }).then(()=>{adddoc.reset()}).catch((err)=>{ err.message})
 })
 
@@ -62,3 +63,20 @@ delm.addEventListener('submit', (e)=>{
     const docRefs = doc(db, 'books', delitem);
      deleteDoc(docRefs).then(()=> delm.reset()).catch((err)=> err.message)
 })
+
+const singlecol = doc(db, 'books', "CbAn0mQOzdCNxhLU1MwU")
+onSnapshot(singlecol, (snapshot)=>{
+    console.log(snapshot.data(), snapshot.id)
+
+})
+
+const updateasingle = document.querySelector(".update");
+updateasingle.addEventListener("submit", ((e)=>{
+    e.preventDefault()
+    const updatesinglecol = doc(db, 'books', "CbAn0mQOzdCNxhLU1MwU")
+    updateDoc(updatesinglecol, {
+        title: updateasingle.field.value
+    }).then(()=>{
+        updateasingle.reset()
+    }).catch((err)=> console.log(err.message))
+}))
