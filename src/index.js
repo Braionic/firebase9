@@ -1,9 +1,11 @@
 import { async } from '@firebase/util';
 import { initializeApp } from 'firebase/app'
 import {
-  getFirestore, collection, getDocs, getDoc, addDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, serverTimestamp, updateDoc
+  getFirestore, collection,
+   getDocs, getDoc, addDoc, 
+   deleteDoc, doc, onSnapshot, query, where, orderBy, serverTimestamp, updateDoc, 
 } from 'firebase/firestore'
-
+import { getAuth,createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 
 const firebaseConfig = {
     apiKey: "AIzaSyB83LRWjI36_F1mJa7H7G78_7702mBqyGY",
@@ -80,3 +82,18 @@ updateasingle.addEventListener("submit", ((e)=>{
         updateasingle.reset()
     }).catch((err)=> console.log(err.message))
 }))
+
+const signupquery = document.querySelector('.signup');
+signupquery.addEventListener("submit", (e)=>{
+    e.preventDefault()
+    const email = signupquery.email.value;
+    const password = signupquery.password.value;
+    const auth = getAuth()
+    createUserWithEmailAndPassword(auth, email, password).then((cred)=>{
+        console.log(cred.user)
+    }).catch((err)=>{
+        console.log(err.message)
+    })
+})
+
+
