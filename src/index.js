@@ -5,7 +5,7 @@ import {
    getDocs, getDoc, addDoc, 
    deleteDoc, doc, onSnapshot, query, where, orderBy, serverTimestamp, updateDoc, 
 } from 'firebase/firestore'
-import { getAuth,createUserWithEmailAndPassword, signOut } from 'firebase/auth'
+import { getAuth,createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword } from 'firebase/auth'
 
 const firebaseConfig = {
     apiKey: "AIzaSyB83LRWjI36_F1mJa7H7G78_7702mBqyGY",
@@ -83,12 +83,12 @@ updateasingle.addEventListener("submit", ((e)=>{
     }).catch((err)=> console.log(err.message))
 }))
 
+const auth = getAuth()
 const signupquery = document.querySelector('.signup');
 signupquery.addEventListener("submit", (e)=>{
     e.preventDefault()
     const email = signupquery.email.value;
     const password = signupquery.password.value;
-    const auth = getAuth()
     createUserWithEmailAndPassword(auth, email, password).then((cred)=>{
         console.log(cred.user)
     }).catch((err)=>{
@@ -96,4 +96,17 @@ signupquery.addEventListener("submit", (e)=>{
     })
 })
 
+const signinquery = document.querySelector(".login");
+signinquery.addEventListener("submit", (e)=>{
+    e.preventDefault()
+    const email = signinquery.email.value;
+    const password = signinquery.password.value;
+    signInWithEmailAndPassword(auth, email, password).then((data)=> console.log(data.user)).catch((err)=> console.log(err.message))
+})
 
+const signoutquery = document.querySelector(".signout");
+signoutquery.addEventListener("click", (e)=>{
+    e.preventDefault()
+    console.log("handle logout")
+    signOut(auth).then((data)=> console.log("signout successfully")).catch((err)=> console.log(err.message))
+})
